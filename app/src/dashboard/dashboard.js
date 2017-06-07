@@ -162,17 +162,20 @@ define(['angular', 'd3', 'angular-ui-router', 'resources/resources', 'datatableP
                 setTimeout(function () {
                     var svg = d3.select('svg#india-map');
                     var height = svg.style('height').replace("px", "");
+                    var width = svg.style('height').replace("px", "");
                     var g = svg.append('g').attr('id', 'legend');
                     var ls_h = 20, ls_w = 20;
                     height = height - ls_h;
                     var colorLength = multiHues.length;
+                    console.log(width);
+                    var xOffset = 0.7*width;
                     for (var i = 0; i < colorLength; i++) {
-                        g.append('rect').attr('x', 5).attr('y', height - i * ls_h).attr('width', ls_w).attr('height', ls_h).style('fill', multiHues[colorLength - i - 1]);
+                        g.append('rect').attr('x', xOffset).attr('y', height - i * ls_h).attr('width', ls_w).attr('height', ls_h).style('fill', multiHues[colorLength - i - 1]);
                     }
-                    g.append('rect').attr('x', 5).attr('y', height - i * ls_h).attr('width', ls_w).attr('height', ls_h).style('fill', '#e0eef5');
+                    g.append('rect').attr('x', xOffset).attr('y', height - i * ls_h).attr('width', ls_w).attr('height', ls_h).style('fill', '#e7f7ed');
                     console.log(height);
-                    g.append('text').attr('x', 10 + ls_w).attr('y', height + ls_h).text('>= ' + _maxProjects + ' Projects')
-                    g.append('text').attr('x', 10 + ls_w).attr('y', height - ls_h * (colorLength - 0.5)).text('No Projects')
+                    g.append('text').attr('x', xOffset+5 + ls_w).attr('y', height + ls_h).text('>= ' + _maxProjects + ' Projects')
+                    g.append('text').attr('x', xOffset+5 + ls_w).attr('y', height - ls_h * (colorLength - 0.5)).text('No Projects')
                 }, 1000);
 
 
