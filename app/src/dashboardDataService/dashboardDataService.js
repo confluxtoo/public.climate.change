@@ -58,7 +58,8 @@ define(['angular', 'resources/resources', 'datatableParserService/datatableParse
                                             indirect: 0
                                         },
                                         projectDetails: [],
-                                        amount_sanctioned: 0
+                                        amount_sanctioned: 0,
+                                        decimals:3
                                     };
                                     state.id = project.state;
                                     state.name = stateCodeMap[project.state];
@@ -142,7 +143,8 @@ define(['angular', 'resources/resources', 'datatableParserService/datatableParse
                                         indirect: 0
                                     },
                                     projectDetails: [],
-                                    amount_sanctioned: 0
+                                    amount_sanctioned: 0,
+                                    decimals:3
                                 };
                                 state.id = project.state;
                                 state.name = stateCodeMap[project.state];
@@ -154,7 +156,7 @@ define(['angular', 'resources/resources', 'datatableParserService/datatableParse
                             state.beneficiaries.direct += project.directbenificieries;
                             state.beneficiaries.indirect += project.indirectbenificieries;
                             state.projectDetails.push(project);
-                            state.amount_sanctioned += project.releasedAmount;
+                            state.amount_sanctioned += parseFloat(project.releasedAmount);
 
                         }
 
