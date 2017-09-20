@@ -463,7 +463,15 @@ define(['angular', 'd3', 'angular-ui-router', 'resources/resources', 'datatableP
                  mode: 'single',
                     callbacks: {
                         label: function(tooltipItems, sectorWiseData) { 
-                            return sectorWiseData.labels[tooltipItems.index] +': ' + sectorWiseData.datasets[tooltipItems.datasetIndex].data[tooltipItems.index] + 'Cr';
+                            var multistringText = [];
+                            var funds = sectorWiseData.labels[tooltipItems.index]+':'+sectorWiseData.datasets[tooltipItems.datasetIndex].data[tooltipItems.index] + 'Cr';
+                            multistringText.push(funds);
+                            var projects = 'Projects'+':'+sectorWiseData.datasets[tooltipItems.datasetIndex].data.projects[tooltipItems.index];
+                            multistringText.push(projects);
+                            var states = 'States'+':'+sectorWiseData.datasets[tooltipItems.datasetIndex].data.states[tooltipItems.index];
+                            multistringText.push(states);
+                            return multistringText;
+                            //return sectorWiseData.labels[tooltipItems.index] +': ' + sectorWiseData.datasets[tooltipItems.datasetIndex].data[tooltipItems.index] + 'Cr';
                         }
                     }
                 }
@@ -471,27 +479,44 @@ define(['angular', 'd3', 'angular-ui-router', 'resources/resources', 'datatableP
 
             var _updateSectorWiseData = function (data) {
                 var _sectorMap = {};
+                var _stateMap = {};
+                var _projectMap = {};
                 if (!data) return;
                 for (var i = 0, x = data.length; i < x; i++) {
                     var state = data[i];
+                    var _sameStateMap = {};
                     //loop through state.projectDetails
                     for (var j = 0, y = state.projectDetails.length; j < y; j++) {
                         var project = state.projectDetails[j];
                         if (!_sectorMap.hasOwnProperty(project.projectCategory)) {
                             _sectorMap[project.projectCategory] = 0;
+                            _stateMap[project.projectCategory] = 0;
+                            _projectMap[project.projectCategory] = 0;
                         }
                         _sectorMap[project.projectCategory] += parseFloat(project.projectCost);
                         _sectorMap[project.projectCategory] = _sectorMap[project.projectCategory];
+                        _projectMap[project.projectCategory] += 1;
+                        if(!_sameStateMap.hasOwnProperty(project.projectCategory)){
+                            _sameStateMap[project.projectCategory] = 0;
+                           _stateMap[project.projectCategory] += 1; 
+                        }
+                        
                     }
                 }
                 $scope.sectorWiseLabels = [];
                 $scope.sectorWiseData = [];
+                $scope.sectorWiseProject = [];
+                $scope.sectorWiseState = [];
 
                 for (var key in _sectorMap) {
                     if (!_sectorMap.hasOwnProperty(key)) continue;
                     $scope.sectorWiseLabels.push(key);
                     $scope.sectorWiseData.push(parseFloat(_sectorMap[key]).toFixed(3));
+                    $scope.sectorWiseProject.push(_projectMap[key]);
+                    $scope.sectorWiseState.push(_stateMap[key]);
                 }
+                $scope.sectorWiseData.projects = $scope.sectorWiseProject;
+                $scope.sectorWiseData.states = $scope.sectorWiseState;
             };
 
             $scope.$watch(function () {
